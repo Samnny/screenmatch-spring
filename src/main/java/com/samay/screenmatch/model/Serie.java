@@ -1,5 +1,7 @@
 package com.samay.screenmatch.model;
 
+import com.samay.screenmatch.service.QueryMyMemory;
+
 import java.util.Optional;
 import java.util.OptionalDouble;
 
@@ -20,7 +22,7 @@ public class Serie {
         this.gender = Category.fromString(dataSerie.gender().split(",")[0].trim());
         this.actors = dataSerie.actors();
         this.poster = dataSerie.poster();
-        this.synopsis = dataSerie.synopsis();
+        this.synopsis = QueryMyMemory.getTranslation(dataSerie.synopsis()).trim();
     }
 
     public String getTitle() {
