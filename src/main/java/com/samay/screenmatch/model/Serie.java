@@ -1,19 +1,37 @@
 package com.samay.screenmatch.model;
 
 import com.samay.screenmatch.service.QueryMyMemory;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name = "series")
 public class Serie {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String title;
+
+    @Enumerated(EnumType.STRING)
     private Category gender;
+
     private String actors;
     private String poster;
     private String synopsis;
     private Integer totalSeasons;
     private Double assessment;
+
+    @Transient
+    private List<Episode> episodes = new ArrayList<>();
+
+    public Serie(){}
 
     public Serie(DataSerie dataSerie){
         this.title = dataSerie.title();
@@ -23,6 +41,14 @@ public class Serie {
         this.actors = dataSerie.actors();
         this.poster = dataSerie.poster();
         this.synopsis = QueryMyMemory.getTranslation(dataSerie.synopsis()).trim();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -79,6 +105,15 @@ public class Serie {
 
     public void setAssessment(Double assessment) {
         this.assessment = assessment;
+    }
+
+
+    public List<Episode> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(List<Episode> episodes) {
+        this.episodes = episodes;
     }
 
     @Override

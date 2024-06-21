@@ -3,8 +3,10 @@ package com.samay.screenmatch.main;
 import com.samay.screenmatch.model.DataSeason;
 import com.samay.screenmatch.model.DataSerie;
 import com.samay.screenmatch.model.Serie;
+import com.samay.screenmatch.repository.SerieRepository;
 import com.samay.screenmatch.service.ConsumeApi;
 import com.samay.screenmatch.service.ConvertData;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +22,11 @@ public class Main {
     private ConsumeApi consumeApi = new ConsumeApi();
     private ConvertData convertData = new ConvertData();
     private List<DataSerie> dataSeries = new ArrayList<>();
+    private SerieRepository serieRepository;
+
+    public Main(SerieRepository serieRepository) {
+        this.serieRepository = serieRepository;
+    }
 
     public void displayMenu() {
         var option = -1;
@@ -57,7 +64,9 @@ public class Main {
 
     private void searchWebSeries() {
         DataSerie data = getDataSerie();
-        dataSeries.add(data);
+        Serie serie = new Serie(data);
+        //dataSeries.add(data);
+        serieRepository.save(serie);
         System.out.println(data);
     }
 
@@ -82,8 +91,8 @@ public class Main {
     }
 
     private void listSeriesSearched(){
-        List<Serie> series = new ArrayList<>();
-        series = dataSeries.stream().map(Serie::new).collect(Collectors.toList());
+        List<Serie> series = serieRepository.findAll();
+        //series = dataSeries.stream().map(Serie::new).collect(Collectors.toList());
         series.stream().sorted(Comparator.comparing(Serie::getGender)).forEach(System.out::println);
     }
 }
